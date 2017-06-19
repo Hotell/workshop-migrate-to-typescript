@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
 
 import { playerCell, aiCell } from './constants';
+import { CellValue, GameState } from './types';
 import { Cell } from './Cell';
-
-/**
- * @export
- * @typedef {'' | 'X' | 'O'} CellValue
- */
-
-/**
- * @export
- * @typedef {'' | 'X Wins!' | 'O Wins!' | 'Draw'} GameState
- */
 
 /**
  * @typedef {Object} State - creates a new type named 'State'

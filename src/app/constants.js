@@ -1,12 +1,4 @@
-/**
- * @export
- * @typedef {'' | 'X' | 'O'} CellValue
- */
-
-/**
- * @export
- * @typedef {'' | 'X Wins!' | 'O Wins!' | 'Draw'} GameState
- */
+import { CellValue } from './types';
 
 /**
  * @type {CellValue}

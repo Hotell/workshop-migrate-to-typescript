@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { GameState } from './types';
 
 type State = {
-  gameState: '' | 'X Wins!' | 'O Wins!' | 'Draw';
+  gameState: GameState;
 };
 
 export class GameStateBar extends Component<{}, State> {
