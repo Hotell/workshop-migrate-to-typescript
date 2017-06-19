@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 
 export class Cell extends Component {
-  // position of cell to className
+  /**
+   * position of cell to className
+   * @param {number} pos
+   */
   posToClassName(pos) {
     let className = 'cell';
     switch (Math.floor(pos / 3)) {
@@ -27,6 +30,10 @@ export class Cell extends Component {
     return className;
   }
 
+  /**
+ *
+ * @param {Event=} e
+ */
   handleClick(e) {
     this.props.handleMove();
   }

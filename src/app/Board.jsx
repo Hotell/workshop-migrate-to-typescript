@@ -3,9 +3,18 @@ import React, { Component } from 'react';
 import { playerCell, aiCell } from './constants';
 import { Cell } from './Cell';
 
+/**
+ * @typedef {Object} State - creates a new type named 'State'
+ * @property {Array<Array<string>>} cells - an array Matrix
+ * @property {string} gameState - a string property of BoardState
+ */
+
 export class Board extends Component {
   state = this.getInitState();
 
+  /**
+   * @returns {State}
+   */
   getInitState() {
     let cells = Array.apply(null, Array(9)).map(() => '');
     return { cells: cells, gameState: '' };
@@ -23,9 +32,12 @@ export class Board extends Component {
     window.removeEventListener('restart', () => this.resetState());
   }
 
-  // Fire a global event notifying GameState changes
-  handleGameStateChange(newState) {
-    var event = new CustomEvent('gameStateChange', { detail: this.state.gameState });
+  /**
+   * Fire a global event notifying GameState changes
+   * @param {string} newGameState
+   */
+  handleGameStateChange(newGameState) {
+    var event = new CustomEvent('gameStateChange', { detail: newGameState });
     event.initEvent('gameStateChange', false, true);
     window.dispatchEvent(event);
   }
