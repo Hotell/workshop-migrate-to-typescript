@@ -69,7 +69,7 @@ npm install --save-dev @types/react @types/react-dom
 
 ## Configure TypeScript
 
-Next, configure TypeScript by creating a `tsconfig.json` file via `yarn tsc init`.
+Next, configure TypeScript by creating a `tsconfig.json` file via `yarn tsc -- --init`.
 
 > **TASK:** Setup Typescript within tsconfig.json
 
