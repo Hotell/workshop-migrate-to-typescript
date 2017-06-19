@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export class GameStateBar extends Component {
+export class GameStateBar extends Component<any, any> {
   state = { gameState: '' };
 
   handleGameStateChange(e) {
