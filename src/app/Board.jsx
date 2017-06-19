@@ -4,15 +4,26 @@ import { playerCell, aiCell } from './constants';
 import { Cell } from './Cell';
 
 /**
+ * @export
+ * @typedef {'' | 'X' | 'O'} CellValue
+ */
+
+/**
+ * @export
+ * @typedef {'' | 'X Wins!' | 'O Wins!' | 'Draw'} GameState
+ */
+
+/**
  * @typedef {Object} State - creates a new type named 'State'
- * @property {Array<Array<string>>} cells - an array Matrix
- * @property {string} gameState - a string property of BoardState
+ * @property {Array<CellValue>} cells - an array Matrix
+ * @property {GameState} gameState - a string property of BoardState
  */
 
 export class Board extends Component {
   state = this.getInitState();
 
   /**
+   * @private
    * @returns {State}
    */
   getInitState() {
@@ -20,6 +31,9 @@ export class Board extends Component {
     return { cells: cells, gameState: '' };
   }
 
+  /**
+   * @private
+   */
   resetState() {
     this.setState(this.getInitState());
   }
@@ -34,7 +48,8 @@ export class Board extends Component {
 
   /**
    * Fire a global event notifying GameState changes
-   * @param {string} newGameState
+   * @private
+   * @param {GameState} newGameState
    */
   handleGameStateChange(newGameState) {
     var event = new CustomEvent('gameStateChange', { detail: newGameState });
@@ -42,7 +57,14 @@ export class Board extends Component {
     window.dispatchEvent(event);
   }
 
-  // check the game state - use the latest move
+  /**
+   * check the game state - use the latest move
+   * @private
+   * @param {Array<CellValue>} cells
+   * @param {number} latestPos
+   * @param {string} latestVal
+   * @returns {string}
+   */
   checkGameState(cells, latestPos, latestVal) {
     if (this.state.gameState !== '') {
       return this.state.gameState;
@@ -83,7 +105,15 @@ export class Board extends Component {
     return '';
   }
 
-  // check if 3 cells have same non-empty val - return the winner state; otherwise undefined
+  /**
+   * check if 3 cells have same non-empty val - return the winner state; otherwise undefined
+   * @private
+   * @param {Array<CellValue>} cells
+   * @param {number} pos0
+   * @param {number} pos1
+   * @param {number} pos2
+   * @returns {string|undefined}
+   */
   check3Cells(cells, pos0, pos1, pos2) {
     if (cells[pos0] === cells[pos1] && cells[pos1] === cells[pos2] && cells[pos0] !== '') {
       if (cells[pos0] === 'X') {
@@ -95,7 +125,11 @@ export class Board extends Component {
     }
   }
 
-  // list all empty cell positions
+  /**
+   * list all empty cell positions
+   * @private
+   * @param {Array<CellValue>} cells
+   */
   findAllEmptyCells(cells) {
     return cells
       .map((v, i) => {
@@ -110,7 +144,13 @@ export class Board extends Component {
       });
   }
 
-  // make a move
+  /**
+   * make a move
+   * @private
+   * @param {number} pos
+   * @param {CellValue=} val
+   * @param {Function=} callback
+   */
   move(pos, val, callback) {
     if (this.state.gameState === '' && this.state.cells[pos] === '') {
       let newCells = this.state.cells.slice();
@@ -127,7 +167,11 @@ export class Board extends Component {
     }
   }
 
-  // handle a new move from player
+  /**
+   * handle a new move from player
+   * @private
+   * @param {number} pos
+   */
   handleNewPlayerMove(pos) {
     this.move(pos, playerCell, () => {
       // AI make a random move following player's move
