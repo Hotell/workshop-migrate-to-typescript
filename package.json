@@ -14,7 +14,6 @@
   "scripts": {
     "cleanup": "shx rm -rf dist",
     "start": "webpack-dev-server --hot",
-    "start:prod": "pushstate-server ./",
     "format": "npm run js:format -- --write",
     "js:format": "prettier --single-quote --print-width 120 --trailing-comma es5 --parser babylon {src,__{tests,mocks}__}/**/*.{js,jsx}"
   },
