@@ -1,12 +1,12 @@
-const { resolve, join } = require('path')
-const webpack = require('webpack')
-const ProgressBarPlugin = require('progress-bar-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { resolve, join } = require('path');
+const webpack = require('webpack');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PATHS = {
   root: resolve(__dirname, 'src'),
   dist: resolve(__dirname, 'dist'),
-}
+};
 
 const config = env => {
   return {
@@ -16,7 +16,7 @@ const config = env => {
       path: PATHS.dist,
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     devtool: 'source-map',
     devServer: {
@@ -25,8 +25,9 @@ const config = env => {
     },
     module: {
       rules: [
+        { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
         // js
-        { test: /\.jsx?$/, include: /src/, use: { loader: 'babel-loader' } },
+        { test: /\.(t|j)sx?$/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
         // css
         { test: /\.css$/, include: /src/, use: ['style-loader', 'css-loader'] },
       ],
@@ -42,7 +43,7 @@ const config = env => {
         template: resolve(PATHS.root, 'index.html'),
       }),
     ],
-  }
-}
+  };
+};
 
-module.exports = config
+module.exports = config;
