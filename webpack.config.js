@@ -1,4 +1,5 @@
 const { resolve, join } = require('path')
+const webpack = require('webpack')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -35,6 +36,7 @@ const config = env => {
       'react-dom': 'ReactDOM',
     },
     plugins: [
+      new webpack.optimize.ModuleConcatenationPlugin(),
       new ProgressBarPlugin(),
       new HtmlWebpackPlugin({
         template: resolve(PATHS.root, 'index.html'),
