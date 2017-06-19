@@ -43,7 +43,7 @@ First off, open terminal and install dependencies in `package.json`.
 ```sh
 npm install
 #or
- yarn install
+yarn install
 ```
 
 Additionally, install TypeScript (2.4 or higher), [awesome-typescript-loader](https://www.npmjs.com/package/awesome-typescript-loader) and [source-map-loader](https://www.npmjs.com/package/source-map-loader) as dev dependencies if you haven't. awesome-typescript-loader is a Webpack plugin that helps you compile TypeScript code to JavaScript, much like babel-loader for Babel. There are also other alternative loaders for TypeScript, such as [ts-loader](https://github.com/TypeStrong/ts-loader). source-map-loader adds source map support for debugging.
@@ -71,7 +71,7 @@ Now allow following options:
 ```
 {
   "compilerOptions": {
-    "outDir": "./dist/",        // path to output directory
+    "outDir": "./ts-out/",      // path to output directory
     "sourceMap": true,          // allow sourcemap support
     "strictNullChecks": true,   // enable strict null checks as a best practice
     "module": "es2015",         // specifiy module code generation
@@ -179,11 +179,20 @@ Let's look at `GameStateBar.jsx` as an example.
 
 Step one is to rename `GameStateBar.jsx` to `GameStateBar.tsx`. If you are using any editor with TypeScript support such as [Visual Studio Code](https://code.visualstudio.com/), you should be able to see a few complaints from your editor.
 
-On line 1 `import React from "react";`, change the import statement to `import * as React from "react"`. This is because while importing a CommonJS module, Babel assumes `modules.export` as default export, while TypeScript does not.
+On line 1 `import React, {Component} from "react";`, change the import statement to:
+
+ ```ts
+ import * as React from 'react'
+ import { Component } from 'react'
+ ```
+
+ This is because while importing a CommonJS module, Babel assumes `modules.export` as default export, while TypeScript does not.
 
 > We wanna introduce minimal changes, so Typescript allows us to mitigate this issue via [`allowSyntheticDefaultImports: true`](https://www.typescriptlang.org/docs/handbook/compiler-options.html) in your `tsconfig.json`
 
-On line 3 `export class GameStateBar extends React.Component {`, change the class declaration to `export class GameStateBar extends React.Component<any, any> {`. The type declaration of `React.Component` uses [generic types](https://www.typescriptlang.org/docs/handbook/generics.html) and requires providing the types for the property and state object for the component. The use of `any` allows us to pass in any value as the property or state object, which is not useful in terms of type checking but suffices as minimum effort to appease the compiler.
+On line 3 `export class GameStateBar extends Component {`, change the class declaration to `export class GameStateBar extends Component<any, any> {`. The type declaration of `Component` uses [generic types](https://www.typescriptlang.org/docs/handbook/generics.html) and requires providing the types for the property and state object for the component.
+
+The use of `any` allows us to pass in any value as the property or state object, which is not useful in terms of type checking but suffices as minimum effort to appease the compiler.
 
 By now, *awesome-typescript-loader* should be able to successfully compile this TypeScript component to JavaScript. Again, try bundling the app with the following command and then open `localhost:8080` in a browser,
 
@@ -197,12 +206,12 @@ yarn start
 
 The more type information provided to TypeScript, the more powerful its type checking is. As a best practice, we recommend providing types for all declarations. We will again use the `GameStateBar` component as an example.
 
-For any `React.Component`, we should properly define the types of the property and state object. The `GameStateBar` component has no properties, therefore we can use `{}` as type.
+For any `Component`, we should properly define the types of the property and state object. The `GameStateBar` component has no properties, therefore we can use `{}` as type.
 
 The state object contains only one property `gameState` which shows the game status (either nothing, someone wins, or draw). Given `gameState` can only have certain known string literal values, let's use [string literal type](https://www.typescriptlang.org/docs/handbook/advanced-types.html) and define the `type` alias as follow before the class declaration.
 
 ```ts
-type GameStateBarState = {
+type State = {
   gameState: '' | 'X Wins!' | 'O Wins!' | 'Draw';
 }
 ```
@@ -210,7 +219,7 @@ type GameStateBarState = {
 With the defined type alias, change the `GameStateBar` class declaration,
 
 ```ts
-export class GameStateBar extends React.Component<{}, GameStateBarState> {...}
+export class GameStateBar extends Component<{}, State> {...}
 ```
 
 Now, supply type information for its members.

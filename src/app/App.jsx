@@ -1,8 +1,10 @@
-import { Board } from './Board'
-import { RestartBtn } from './RestartBtn'
-import { GameStateBar } from './GameStateBar'
+import React, { Component } from 'react';
 
-export class App extends React.Component {
+import { Board } from './Board';
+import { RestartBtn } from './RestartBtn';
+import { GameStateBar } from './GameStateBar';
+
+export class App extends Component {
   render() {
     return (
       <div className="app">
@@ -14,6 +16,6 @@ export class App extends React.Component {
         <RestartBtn />
         <GameStateBar />
       </div>
-    )
+    );
   }
 }

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export class RestartBtn extends React.Component {
+export class RestartBtn extends Component {
   // Fire a global event notifying restart of game
   handleClick(e) {
     var event = document.createEvent('Event');

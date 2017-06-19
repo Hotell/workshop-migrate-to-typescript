@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-export class GameStateBar extends React.Component {
+export class GameStateBar extends Component {
   constructor(props) {
     super(props);
     this.state = { gameState: '' };

@@ -1,4 +1,6 @@
-export class Cell extends React.Component {
+import React, { Component } from 'react';
+
+export class Cell extends Component {
   // position of cell to className
   posToClassName(pos) {
     let className = 'cell';
