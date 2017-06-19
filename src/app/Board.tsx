@@ -4,20 +4,19 @@ import { playerCell, aiCell } from './constants';
 import { CellValue, GameState } from './types';
 import { Cell } from './Cell';
 
-/**
- * @typedef {Object} State - creates a new type named 'State'
- * @property {Array<CellValue>} cells - an array Matrix
- * @property {GameState} gameState - a string property of BoardState
- */
+type State = {
+  cells: CellValue[];
+  gameState: GameState;
+};
 
-export class Board extends Component {
+export class Board extends Component<{}, State> {
   state = this.getInitState();
 
   /**
    * @private
    * @returns {State}
    */
-  getInitState() {
+  getInitState(): State {
     let cells = Array.apply(null, Array(9)).map(() => '');
     return { cells: cells, gameState: '' };
   }
@@ -40,9 +39,8 @@ export class Board extends Component {
   /**
    * Fire a global event notifying GameState changes
    * @private
-   * @param {GameState} newGameState
    */
-  handleGameStateChange(newGameState) {
+  handleGameStateChange(newGameState: GameState) {
     var event = new CustomEvent('gameStateChange', { detail: newGameState });
     event.initEvent('gameStateChange', false, true);
     window.dispatchEvent(event);
@@ -51,12 +49,8 @@ export class Board extends Component {
   /**
    * check the game state - use the latest move
    * @private
-   * @param {Array<CellValue>} cells
-   * @param {number} latestPos
-   * @param {string} latestVal
-   * @returns {string}
    */
-  checkGameState(cells, latestPos, latestVal) {
+  checkGameState(cells: CellValue[], latestPos: number, latestVal: string): GameState {
     if (this.state.gameState !== '') {
       return this.state.gameState;
     }
@@ -99,13 +93,8 @@ export class Board extends Component {
   /**
    * check if 3 cells have same non-empty val - return the winner state; otherwise undefined
    * @private
-   * @param {Array<CellValue>} cells
-   * @param {number} pos0
-   * @param {number} pos1
-   * @param {number} pos2
-   * @returns {string|undefined}
    */
-  check3Cells(cells, pos0, pos1, pos2) {
+  check3Cells(cells: CellValue[], pos0: number, pos1: number, pos2: number): GameState | undefined {
     if (cells[pos0] === cells[pos1] && cells[pos1] === cells[pos2] && cells[pos0] !== '') {
       if (cells[pos0] === 'X') {
         return 'X Wins!';
@@ -119,9 +108,8 @@ export class Board extends Component {
   /**
    * list all empty cell positions
    * @private
-   * @param {Array<CellValue>} cells
    */
-  findAllEmptyCells(cells) {
+  findAllEmptyCells(cells: CellValue[]): number[] {
     return cells
       .map((v, i) => {
         if (v === '') {
@@ -138,11 +126,8 @@ export class Board extends Component {
   /**
    * make a move
    * @private
-   * @param {number} pos
-   * @param {CellValue=} val
-   * @param {Function=} callback
    */
-  move(pos, val, callback) {
+  move(pos: number, val: CellValue, callback?: () => void): void {
     if (this.state.gameState === '' && this.state.cells[pos] === '') {
       let newCells = this.state.cells.slice();
       newCells[pos] = val;

@@ -1,11 +1,18 @@
 import React, { Component, MouseEvent } from 'react';
+import { CellValue } from './types';
 
-export class Cell extends Component {
+type Props = {
+  pos: number;
+  val: CellValue;
+  handleMove: () => void;
+};
+
+export class Cell extends Component<Props, void> {
   /**
    * position of cell to className
    * @param {number} pos
    */
-  posToClassName(pos) {
+  posToClassName(pos: number): string {
     let className = 'cell';
     switch (Math.floor(pos / 3)) {
       case 0:
@@ -34,7 +41,7 @@ export class Cell extends Component {
    *
    * @param {MouseEvent=} e
    */
-  handleClick(e) {
+  handleClick(e: MouseEvent<HTMLDivElement>) {
     this.props.handleMove();
   }
 
