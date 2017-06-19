@@ -4,10 +4,7 @@ import { playerCell, aiCell } from './constants';
 import { Cell } from './Cell';
 
 export class Board extends Component {
-  constructor(props) {
-    super(props);
-    this.state = this.getInitState();
-  }
+  state = this.getInitState();
 
   getInitState() {
     let cells = Array.apply(null, Array(9)).map(() => '');

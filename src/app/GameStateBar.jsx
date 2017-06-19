@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 
 export class GameStateBar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { gameState: '' };
-  }
+  state = { gameState: '' };
 
   handleGameStateChange(e) {
     this.setState({ gameState: e.detail });
