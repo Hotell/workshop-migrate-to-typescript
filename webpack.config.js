@@ -10,7 +10,7 @@ const PATHS = {
 
 const config = env => {
   return {
-    entry: resolve(PATHS.root, 'main.jsx'),
+    entry: resolve(PATHS.root, 'main.tsx'),
     output: {
       filename: 'bundle.js',
       path: PATHS.dist,
@@ -27,7 +27,19 @@ const config = env => {
       rules: [
         { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
         // js
-        { test: /\.(t|j)sx?$/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
+        {
+          test: /\.(t|j)sx?$/,
+          include: /src/,
+          use: [
+            { loader: 'babel-loader' },
+            {
+              loader: 'awesome-typescript-loader',
+              options: {
+                useBabel: true,
+              },
+            },
+          ],
+        },
         // css
         { test: /\.css$/, include: /src/, use: ['style-loader', 'css-loader'] },
       ],
