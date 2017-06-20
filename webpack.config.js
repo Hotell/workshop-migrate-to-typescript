@@ -1,12 +1,12 @@
-const { resolve, join } = require('path')
-const webpack = require('webpack')
-const ProgressBarPlugin = require('progress-bar-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { resolve, join } = require('path');
+const webpack = require('webpack');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PATHS = {
   root: resolve(__dirname, 'src'),
   dist: resolve(__dirname, 'dist'),
-}
+};
 
 const config = env => {
   return {
@@ -42,7 +42,7 @@ const config = env => {
         template: resolve(PATHS.root, 'index.html'),
       }),
     ],
-  }
-}
+  };
+};
 
-module.exports = config
+module.exports = config;
