@@ -26,9 +26,9 @@ const config = env => {
     module: {
       rules: [
         // js
-        { test: /\.jsx?$/, include: /src/, use: { loader: 'babel-loader' } },
+        { test: /\.jsx?$/, include: PATHS.root, use: { loader: 'babel-loader' } },
         // css
-        { test: /\.css$/, include: /src/, use: ['style-loader', 'css-loader'] },
+        { test: /\.css$/, include: PATHS.root, use: ['style-loader', 'css-loader'] },
       ],
     },
     externals: {
