@@ -146,9 +146,8 @@ export class Board extends Component<{}, State> {
   /**
    * handle a new move from player
    * @private
-   * @param {number} pos
    */
-  handleNewPlayerMove(pos) {
+  handleNewPlayerMove(pos: number) {
     this.move(pos, playerCell, () => {
       // AI make a random move following player's move
       let emptyCells = this.findAllEmptyCells(this.state.cells);

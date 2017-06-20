@@ -26,17 +26,13 @@ const config = env => {
     module: {
       rules: [
         { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' },
-        // js
+        // ts
         {
-          test: /\.(t|j)sx?$/,
+          test: /\.tsx?$/,
           include: /src/,
           use: [
-            { loader: 'babel-loader' },
             {
               loader: 'awesome-typescript-loader',
-              options: {
-                useBabel: true,
-              },
             },
           ],
         },
