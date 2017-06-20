@@ -139,10 +139,10 @@ const config = env => {
 +       // addition - add source-map support
 +       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         // js
-+       { test: /\.(t|j)sx?$/, include: /src/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
--       { test: /\.jsx?$/, include: /src/, use: { loader: 'babel-loader' } },
++       { test: /\.(t|j)sx?$/, include: PATHS.root, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
+-       { test: /\.jsx?$/, include: PATHS.root, use: { loader: 'babel-loader' } },
         // css
-        { test: /\.css$/, include: /src/, use: ['style-loader', 'css-loader'] },
+        { test: /\.css$/, include: PATHS.root, use: ['style-loader', 'css-loader'] },
       ],
     },
     externals: {
@@ -400,10 +400,10 @@ const config = env => {
 +       // addition - add source-map support
 +       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         // js
-+       { test: /\.(t|j)sx?$/, include: /src/, use: [{ loader: 'awesome-typescript-loader' }] },
--       { test: /\.(t|j)sx?$/, include: /src/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
++       { test: /\.(t|j)sx?$/, include: PATHS.root, use: [{ loader: 'awesome-typescript-loader' }] },
+-       { test: /\.(t|j)sx?$/, include: PATHS.root, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
         // css
-        { test: /\.css$/, include: /src/, use: ['style-loader', 'css-loader'] },
+        { test: /\.css$/, include: PATHS.root, use: ['style-loader', 'css-loader'] },
       ],
     },
     externals: {
