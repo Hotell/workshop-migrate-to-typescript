@@ -69,7 +69,7 @@ npm install --save-dev @types/react @types/react-dom
 
 ## Configure TypeScript
 
-Next, configure TypeScript by creating a `tsconfig.json` file via `yarn tsc init`.
+Next, configure TypeScript by creating a `tsconfig.json` file via `yarn tsc -- --init`.
 
 > **TASK:** Setup Typescript within tsconfig.json
 
@@ -82,12 +82,15 @@ Now allow following options:
     "sourceMap": true,          // allow sourcemap support
     "strictNullChecks": true,   // enable strict null checks as a best practice
     "module": "es2015",         // specifiy module code generation
-    "target": "es5",            // specify ECMAScript target version
+    "target": "es2017",            // specify ECMAScript target version
     "jsx": "preserve",          // don't transpile jsx to js, let babel handle it
     "allowJs": true             // allow a partial TypeScript and JavaScript codebase
   },
   "include": [
     "./src/"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
 ```
@@ -136,7 +139,7 @@ const config = env => {
 +       // addition - add source-map support
 +       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         // js
-+       { test: /\.(t|j)sx?$/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
++       { test: /\.(t|j)sx?$/, include: /src/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
 -       { test: /\.jsx?$/, include: /src/, use: { loader: 'babel-loader' } },
         // css
         { test: /\.css$/, include: /src/, use: ['style-loader', 'css-loader'] },
@@ -184,13 +187,53 @@ We can allow type checking of our vanilla Javascript. Typescript is very powerfu
 
 This is provided on file basis by leveraging `// @ts-check` pragma or for whole project by setting `{checkJs: true}` in tsconfig. If we enable it for whole codebase, we can again explicitly turn it of per file basis via `// @ts-nocheck`. As a bonus TS enables us to ignore just specific lines in typed check JS via `// @ts-ignore`. Cool stuff !
 
-BONUS: [Typescript understands JSDoc annotations like a boss](https://github.com/Microsoft/TypeScript/wiki/JSDoc-support-in-JavaScript), so if you've already used JSDoc in your project, you get immediate benefits.
+**BONUS:**
+
+ [Typescript understands JSDoc annotations like a boss](https://github.com/Microsoft/TypeScript/wiki/JSDoc-support-in-JavaScript), so if you've already used JSDoc in your project, you get immediate benefits.
 
 > **TASK:** allow type checking JS files in whole project
 
-> **TASK:** try to introduce some errors and fix them
+
+Typescript will start complaining, problem is with following lines across the codebase:
+
+`import React, { Component } from 'react';`
+
+This is because while importing a CommonJS module, Babel assumes `modules.export` as default export, while TypeScript does not.
+
+We can fix it by changing the import statement to following across whole project:
+
+ ```ts
+ import * as React from 'react'
+ import { Component } from 'react'
+ ```
+
+But as we wanna introduce minimal changes, Typescript allows us to mitigate this issue via [`allowSyntheticDefaultImports: true`](https://www.typescriptlang.org/docs/handbook/compiler-options.html) in your `tsconfig.json`
+
+> **TASK:** fix type errors within Board and Cell -> wrong JSDoc annotation, React Event mismatch
 
 > **TASK:** add missing JSDoc to Board.jsx to get proper type checking
+
+**Hint:**
+
+Board.jsx state consist from following types
+
+> [Unfortunately there isn't a way how to import types from other files via `import`](https://github.com/Microsoft/TypeScript/issues/14377)
+
+```js
+/**
+ * @typedef {'' | 'X' | 'O'} CellValue
+ */
+
+/**
+ * @typedef {'' | 'X Wins!' | 'O Wins!' | 'Draw'} GameState
+ */
+
+ /**
+ * @typedef {Object} State - creates a new type named 'State'
+ * @property {Array<CellValue>} cells - an array Matrix
+ * @property {GameState} gameState - a string property of BoardState
+ */
+```
 
 ### Transition to TS
 
@@ -201,22 +244,12 @@ Let's look at `GameStateBar.jsx` as an example.
 
 Step one is to rename `GameStateBar.jsx` to `GameStateBar.tsx`. If you are using any editor with TypeScript support such as [Visual Studio Code](https://code.visualstudio.com/), you should be able to see a few complaints from your editor.
 
-On line 1 `import React, { Component } from 'react';`, change the import statement to:
-
- ```ts
- import * as React from 'react'
- import { Component } from 'react'
- ```
-
- This is because while importing a CommonJS module, Babel assumes `modules.export` as default export, while TypeScript does not.
-
-> We wanna introduce minimal changes, so Typescript allows us to mitigate this issue via [`allowSyntheticDefaultImports: true`](https://www.typescriptlang.org/docs/handbook/compiler-options.html) in your `tsconfig.json`
 
 On line 3 `export class GameStateBar extends Component {`, change the class declaration to `export class GameStateBar extends Component<any, any> {`. The type declaration of `Component` uses [generic types](https://www.typescriptlang.org/docs/handbook/generics.html) and requires providing the types for the property and state object for the component.
 
 The use of `any` allows us to pass in any value as the property or state object, which is not useful in terms of type checking but suffices as minimum effort to appease the compiler.
 
-By now, *awesome-typescript-loader* should be able to successfully compile this TypeScript component to JavaScript. Again, try bundling the app with the following command and then open `localhost:8080` in a browser,
+By now, *awesome-typescript-loader* should be able to successfully compile this TypeScript component to JavaScript without errors by just striping types ( remember Babel is doing transpilation to ES5 ). Again, try bundling the app with the following command and then open `localhost:8080` in a browser,
 
 ```sh
 npm start
@@ -253,7 +286,6 @@ Now, supply type information for its members.
 
 ```ts
 // add types for params
-constructor(props: {}) {...}
 handleGameStateChange(e: CustomEvent) {...}
 handleRestart(e: Event) {...}
 
@@ -293,6 +325,20 @@ npm start
 # OR
 yarn start
 ```
+
+## Encapsulate all types to types.ts
+
+You've may noticed that we introduced to GameStateBar the same part of State that is used within Board.jsx
+
+It's good pracice to store common innert types to `types.ts` folder
+
+```ts
+export type GameState = '' | 'X Wins!' | 'O Wins!' | 'Draw';
+export type CellValue = '' | 'X' | 'O';
+```
+
+> **TASK:** Use this types across apps and remove duplicates of JSDoc
+
 
 ## Adopt TypeScript in the entire codebase
 
@@ -354,8 +400,8 @@ const config = env => {
 +       // addition - add source-map support
 +       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
         // js
-+       { test: /\.(t|j)sx?$/, use: [{ loader: 'awesome-typescript-loader' }] },
--       { test: /\.(t|j)sx?$/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
++       { test: /\.(t|j)sx?$/, include: /src/, use: [{ loader: 'awesome-typescript-loader' }] },
+-       { test: /\.(t|j)sx?$/, include: /src/, use: [{ loader: 'babel-loader' }, { loader: 'awesome-typescript-loader' }] },
         // css
         { test: /\.css$/, include: /src/, use: ['style-loader', 'css-loader'] },
       ],
@@ -381,15 +427,16 @@ We don't need anymore to check or transpile Js, so we can remove those compiler 
 ```diff
 {
   "compilerOptions": {
-    "outDir": "./ts-out/",      // path to output directory
-    "sourceMap": true,          // allow sourcemap support
-    "strict": true,             // enable strict mode as a best practice
-    "module": "es2015",         // specifiy module code generation
-    "target": "es5",            // specify ECMAScript target version
--    "jsx": "preserve",         // don't transpile jsx to js, let babel handle it
-+    "jsx": "react",            // transpile jsx to js
--    "allowJs": true            // allow a partial TypeScript and JavaScript codebase
--    "checkJs: true             // allow type checking of Javascript files with JSDoc
+    "outDir": "./ts-out/",     // path to output directory
+    "sourceMap": true,         // allow sourcemap support
+    "strict": true,            // enable strict mode as a best practice
+    "module": "es2015",        // specifiy module code generation
+-   "target": "es2017",        // specify ECMAScript target version
++   "target": "es5",           // specify ECMAScript target version to ES5
+-   "jsx": "preserve",         // don't transpile jsx to js, let babel handle it
++   "jsx": "react",            // transpile jsx to js
+-   "allowJs": true            // allow a partial TypeScript and JavaScript codebase
+-   "checkJs: true             // allow type checking of Javascript files with JSDoc
   },
   "include": [
     "./src/"
