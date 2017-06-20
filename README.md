@@ -2,6 +2,34 @@
 
 This walkthrough illustrates how to adopt TypeScript in an existing React/Babel/Webpack project. We'll start with a TicTacToe project written fully in JavaScript. By the end, you will have a TicTacToe project fully written with TypeScript.
 
+## Prerequisites
+
+You need following software/tools for this workshop
+
+- [git](https://git-scm.com/)
+- [NodeJs](https://nodejs.org/en/) >= v6
+- [Yarn](https://yarnpkg.com/en/docs/install) `npm install -g yarn`
+- Code Editor ( we peffer [VSCode](https://code.visualstudio.com/Download) ! )
+
+Clone this repo:
+
+```sh
+git clone git@github.com:Hotell/workshop-migrate-to-typescript.git
+
+cd workshop-migrate-to-typescript
+rm -rf .git
+git init
+code .
+```
+
+Now install recommended plugins:
+
+![install-plugins](https://code.visualstudio.com/images/extension-gallery_recommendations.png)
+
+
+## Let's start !
+
+
 Adopting TypeScript in any project can be broken down into 2 phases,
  * Adding TypeScript compiler (tsc) to your build pipeline.
  * Converting JavaScript files into TypeScript files.
